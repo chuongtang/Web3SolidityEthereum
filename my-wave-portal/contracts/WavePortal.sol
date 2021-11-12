@@ -16,7 +16,7 @@ contract WavePortal {
       totalWaves += 1;
       console.log("%s has waved!", msg.sender); //msg.sender is the address of the person who called the function
   }
-   function getTotalWaves() public view returns (uint256) {
+    function getTotalWaves() public view returns (uint256) {
         console.log("We have %d total waves!", totalWaves);
         return totalWaves;
     }

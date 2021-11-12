@@ -20,11 +20,9 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   solidity: "0.8.4",
   networks: {
-    hardhat: {
-    },
     rinkeby: {
       url: process.env.SMART_URL,
-      accounts: [process.env.SMART_ACCOUNT]
+      accounts: [process.env.SMART_ACCOUNT],
     },
   },
 };
