@@ -28,15 +28,27 @@ contract WavePortal {
 
     // From the frontend, user send 🢛 this message
     function wave(string memory _message) public {
-      totalWaves += 1;
+    totalWaves += 1;
       console.log("%s has waved!", msg.sender); //msg.sender is the address of the person who called the function
 
         // push the new message to array for storing.
-      waves.push(Wave(msg.sender, _message, block.timestamp));
+    waves.push(Wave(msg.sender, _message, block.timestamp));
 
         // emit this event (created above) to frontend 
-      emit NewWave(msg.sender, block.timestamp, _message);
-  }
+    emit NewWave(msg.sender, block.timestamp, _message);
+
+
+    /* ⇩ send 0.0001 ETH to people waving at me  ⇩ */
+    uint256 prizeAmount = 0.0001 ether;
+    require(
+        prizeAmount <= address(this).balance, //⇐ the balance of the contract itself.
+        "Trying to withdraw more money than the contract has."
+    );
+    (bool success, ) = (msg.sender).call{value: prizeAmount}("");// this is where money got sent
+    
+    // If Txn NOT success,  send below message 🢛
+    require(success, "Failed to withdraw money from contract.");
+    }
 
     // This will return the struct array "wave" for frontend display
 
