@@ -18,8 +18,8 @@ contract WavePortal {
         uint256 timestamp; // The timestamp when the user waved.
     }
 
-    constructor() {
-        console.log("Successfully deployed the smart contract built by TLC");
+    constructor() payable {
+        console.log("Successfully deployed the PAYABLE smart contract built by TLC");
     }
 
     // Declare a variable waves that lets me store an array of structs.

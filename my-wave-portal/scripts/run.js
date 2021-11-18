@@ -11,7 +11,9 @@ const main = async () => {
   const waveContractFactory = await hre.ethers.getContractFactory('WavePortal');
 
   // Hardhat will create a local Ethereum network. Everytime we run the contract, a fresh blockchain will be created
-  const waveContract = await waveContractFactory.deploy();
+  const waveContract = await waveContractFactory.deploy({
+    value: hre.ethers.utils.parseEther('0.1'), // this means deploy the contract and fund it with 0.1ETH
+  });
 
   // Deploy the contract to local blockchain
   await waveContract.deployed();
@@ -21,9 +23,26 @@ const main = async () => {
   let waveCount;
   waveCount = await waveContract.getTotalWaves();
   console.log("Total wave count:".bgCyan, waveCount.toNumber());
-  
+
+  //Get Contract balance
+  let contractBalance = await hre.ethers.provider.getBalance(
+    waveContract.address
+  );
+  console.log(
+    'Contract balance:',
+    hre.ethers.utils.formatEther(contractBalance) //Check if I have 0.1Eth that was funded when deploy.
+  );
+
+
   let waveTxn = await waveContract.wave("A message!");
   await waveTxn.wait(); // Wait for the transaction to be mined
+
+  // Get Contract balance calling wave
+  contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+  console.log(
+    'Contract balance:',
+    hre.ethers.utils.formatEther(contractBalance) //Balance will drop after wave
+  );
 
   // const [_, randomPerson] = await hre.ethers.getSigners();
   waveTxn = await waveContract.connect(randomPerson).wave('Another message!');
