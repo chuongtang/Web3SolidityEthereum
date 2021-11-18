@@ -20,24 +20,17 @@ const main = async () => {
 
   let waveCount;
   waveCount = await waveContract.getTotalWaves();
+  console.log("Total wave count:".bgCyan, waveCount.toNumber());
   
-  let waveTxn = await waveContract.wave();
-  await waveTxn.wait();
+  let waveTxn = await waveContract.wave("A message!");
+  await waveTxn.wait(); // Wait for the transaction to be mined
 
-  // Finally, We grab the waveCount one more time to see if it changed.
-  waveCount = await waveContract.getTotalWaves();
+  // const [_, randomPerson] = await hre.ethers.getSigners();
+  waveTxn = await waveContract.connect(randomPerson).wave('Another message!');
+  await waveTxn.wait(); // Wait for the transaction to be mined
 
-
-  let wavers =[]
-  //  this simulate other people hitting our wave functions
-  
-  waveTxn = await waveContract.connect(randomPerson).wave();
-  wavers.push(randomPerson.address);
-  console.log("These are my waver".blue, wavers);
-
-  await waveTxn.wait();
-
-  waveCount = await waveContract.getTotalWaves();
+  let allWaves = await waveContract.getAllWaves();
+  console.log(allWaves);
 };
 
 const runMain = async () => {
