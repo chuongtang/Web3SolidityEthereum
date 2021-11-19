@@ -17,39 +17,57 @@ const main = async () => {
 
   // Deploy the contract to local blockchain
   await waveContract.deployed();
-  console.log("Contract deployed to:".yellow, waveContract.address);
-  console.log("Contract deployed by:".green, owner.address);
+  console.log("Contract deployed TO:".yellow, waveContract.address);
+  console.log("Deployed BY:".green, owner.address);
 
-  let waveCount;
-  waveCount = await waveContract.getTotalWaves();
-  console.log("Total wave count:".bgCyan, waveCount.toNumber());
+    //Get Contract balance
+    let contractBalance = await hre.ethers.provider.getBalance(
+      waveContract.address
+    );
+    console.log(
+      'Contract balance:'.bgGreen,
+      hre.ethers.utils.formatEther(contractBalance) //Check if I have 0.1Eth that was funded when deploy.
+    );
 
-  //Get Contract balance
-  let contractBalance = await hre.ethers.provider.getBalance(
+  // let waveCount;
+  // waveCount = await waveContract.getTotalWaves();
+  // console.log("Total wave count:".bgCyan, waveCount.toNumber());
+
+   /*
+   * Let's try two waves now
+   */
+   const waveTxn = await waveContract.wave('This is wave #1');
+   await waveTxn.wait();
+ 
+   const waveTxn2 = await waveContract.wave('This is wave #2');
+   await waveTxn2.wait();
+
+  //Get Contract balance after 2 waves
+  contractBalance = await hre.ethers.provider.getBalance(
     waveContract.address
   );
   console.log(
-    'Contract balance:',
+    'Contract balance after 2 waves:'.bgRed,
     hre.ethers.utils.formatEther(contractBalance) //Check if I have 0.1Eth that was funded when deploy.
   );
 
 
-  let waveTxn = await waveContract.wave("A message!");
-  await waveTxn.wait(); // Wait for the transaction to be mined
+  // let waveTxn = await waveContract.wave("A message!");
+  // await waveTxn.wait(); // Wait for the transaction to be mined
 
   // Get Contract balance calling wave
-  contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
-  console.log(
-    'Contract balance:',
-    hre.ethers.utils.formatEther(contractBalance) //Balance will drop after wave
-  );
+  // contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+  // console.log(
+  //   'Contract balance:',
+  //   hre.ethers.utils.formatEther(contractBalance) //Balance will drop after wave
+  // );
 
-  // const [_, randomPerson] = await hre.ethers.getSigners();
-  waveTxn = await waveContract.connect(randomPerson).wave('Another message!');
-  await waveTxn.wait(); // Wait for the transaction to be mined
+  // // const [_, randomPerson] = await hre.ethers.getSigners();
+  // waveTxn = await waveContract.connect(randomPerson).wave('Another message!');
+  // await waveTxn.wait(); // Wait for the transaction to be mined
 
   let allWaves = await waveContract.getAllWaves();
-  console.log(allWaves);
+  console.log("all waves",allWaves.red);
 };
 
 const runMain = async () => {
