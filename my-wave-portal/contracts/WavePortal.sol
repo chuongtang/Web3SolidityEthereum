@@ -23,6 +23,12 @@ contract WavePortal {
     // Declare a variable waves that lets me store an array of structs.
     Wave[] waves;
 
+     /*
+     * This is an address => uint mapping, meaning I can associate an address with a number!
+     * In this case, I'll be storing the address with the last time the user waved at us.
+     */
+    mapping(address => uint256) public lastWavedAt;
+
     constructor() payable {
         console.log("Successfully deployed the PAYABLE smart contract built by TLC");
         
@@ -37,6 +43,16 @@ contract WavePortal {
         
     // From the frontend, user send 🢛 this message
     function wave(string memory _message) public {
+
+        /* Require current timestamp >=15-minutes last timestamp*/
+        require(
+            lastWavedAt[msg.sender] + 30 seconds < block.timestamp,
+            "Please wait 30 seconds to send another message"
+        );
+
+        /* Update the current timestamp we have for the user*/
+        lastWavedAt[msg.sender] = block.timestamp;
+
         totalWaves += 1;
         console.log("%s has waved!", msg.sender); //msg.sender is the address of the person who called the function
         console.log("%s is the message", _message);
