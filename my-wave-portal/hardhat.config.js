@@ -17,6 +17,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
+
+ const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL
 module.exports = {
   solidity: "0.8.4",
   networks: {
@@ -24,5 +26,9 @@ module.exports = {
       url: process.env.SMART_URL,
       accounts: [process.env.SMART_ACCOUNT],
     },
+    goerli:{
+      url: process.env.GOERLI_RPC_URL,
+      accounts: [process.env.NEW_SMART_ACCOUNT],
+    }
   },
 };
